@@ -14,7 +14,7 @@ export class UUID {
   }
 
   private validate() {
-    if (!uuidValidate(this._id) {
+    if (!uuidValidate(this._id)) {
       throw new InvalidUUIDError();
     }
   }
