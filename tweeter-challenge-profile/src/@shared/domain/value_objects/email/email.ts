@@ -19,7 +19,6 @@ export class Email extends ValueObject<string> {
     return this.splittedEmail[0];
   }
 
-
   public get emailInfo(): EmailInfo {
     return {
       username: this.username,
