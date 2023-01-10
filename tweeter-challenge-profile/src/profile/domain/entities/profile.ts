@@ -1,30 +1,40 @@
-import { Email } from "@shared/domain/value_objects/email/email";
-import { Name } from "@shared/domain/value_objects/name/name";
-import { UUID } from "@shared/domain/value_objects/uuid/uuid";
+import { Entity } from "@shared/domain/entities/entity";
+import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 
 export interface ProfileEntityFields {
-  id: string;
-  name: Name;
-  email: Email;
-  tweets?: string[];
+  name: string;
+  email: string;
+  bio?: string;
+  tweets?: Identifier[];
 }
 
-export class ProfileEntity {
-  public constructor(private _fields: ProfileEntityFields, private _id: UUID) {}
-
-  public get id(): string {
-    return this._id.value;
+export class ProfileEntity extends Entity<ProfileEntityFields, Required<ProfileEntityFields>> {
+  public constructor(fields: ProfileEntityFields, id: Identifier ) {
+    super(fields, id);
   }
 
   public get name(): string {
-    return this._fields.name.value;
+    return this._fields.name;
   }
 
   public get email(): string {
-    return this._fields.email.value;
+    return this._fields.email;
   }
 
-  public get tweets(): string[] {
-    return this._fields.tweets || [];
+  public get bio(): string {
+    return this._fields.bio;
+  }
+
+  public get tweets(): Identifier[] {
+    return this._fields.tweets;
+  }
+
+  protected override mountFields(fields: ProfileEntityFields): Required<ProfileEntityFields> {
+    return {
+      name: fields.name,
+      email: fields.email,
+      bio: fields.bio || '',
+      tweets: fields.tweets || []
+    }
   }
 }

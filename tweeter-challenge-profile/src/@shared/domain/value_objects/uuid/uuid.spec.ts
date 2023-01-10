@@ -1,20 +1,18 @@
-import { InvalidUUIDError } from "@shared/domain/errors/invalid_uuid.error";
-import { UUID } from "@shared/domain/value_objects/uuid/uuid"
-import { v4 } from "uuid";
+import { ValidationError } from "@shared/domain/validation/validation";
+import { Identifier, UniqueId } from "@shared/domain/value_objects/uuid/uuid"
+import { createMock } from "ts-auto-mock";
 
-describe("UUID", () => {
-  it("should construct uuid without parameter", () => {
-    const uuid = new UUID();
-    expect(uuid.value).toBeTruthy();
+describe("Id", () => {
+  it("should construct id", () => {
+    const uniqueIdMock = createMock<UniqueId>();
+    const id = new Identifier(uniqueIdMock, { hasError: (): undefined => undefined });
+    expect(id.value.id).toBe(uniqueIdMock.id);
   });
 
-  it("should construct passing an uuid", () => {
-    const id = v4();
-    const uuid = new UUID(id);
-    expect(uuid.value).toBe(id);
-  });
-
-  it("should throw an erro when passing an invalid uuid", () => {
-    expect(() => new UUID('invalid')).toThrow(InvalidUUIDError);
+  it("should thrown an id error", () => {
+    const uniqueIdMock = createMock<UniqueId>();
+    expect(() => {
+      new Identifier(uniqueIdMock, { hasError: (): ValidationError => ({ name: 'id', message: 'id error'}) });
+    }).toThrow('id error')
   });
 });

@@ -10,6 +10,9 @@
       ],
       "@profile/*": [
         "src/profile/*"
+      ],
+      "@tweet/*": [
+        "src/tweet/*"
       ]
     },
     "resolveJsonModule": true,

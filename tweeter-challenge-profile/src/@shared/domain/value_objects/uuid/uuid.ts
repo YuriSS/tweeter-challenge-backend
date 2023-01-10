@@ -1,23 +1,12 @@
-import { InvalidUUIDError } from "@shared/domain/errors/invalid_uuid.error";
-import { v4 as uuidv4, validate as uuidValidate } from "uuid"
-import { ValueObject } from "../value_object";
+import { Validation } from "@shared/domain/validation/validation";
+import { ValueObject } from "@shared/domain/value_objects/value_object";
 
-export class UUID extends ValueObject<string> {
-  private _id: string;
+export interface UniqueId {
+  id: string;
+}
 
-  public constructor(id?: string) {
-    super();
-    this._id = id || uuidv4();
-    this.validate();
-  }
-
-  public get value(): string {
-    return this._id;
-  }
-
-  protected validate() {
-    if (!uuidValidate(this._id)) {
-      throw new InvalidUUIDError();
-    }
+export class Identifier extends ValueObject<UniqueId> {
+  public constructor(id: UniqueId, validation: Validation<UniqueId>) {
+    super(id, validation);
   }
 }

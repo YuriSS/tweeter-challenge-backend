@@ -1,15 +1,21 @@
-import { InvalidNameError } from '@shared/domain/errors/invalid_name.error';
-import { Name } from '@shared/domain/value_objects/name/name'
+import { ValidationError } from '@shared/domain/validation/validation';
+import { Name, NameFields } from '@shared/domain/value_objects/name/name'
 
 describe('Name', () => {
   it('should construct name as valid', () => {
-    const nameString = 'Test Name';
-    const name = new Name(nameString);
-    expect(name.value).toBe(nameString);
+    const nameMock: NameFields = { firstName: 'Jhon', lastName: 'Test' };
+    const name = new Name(nameMock, { hasError: (): undefined => undefined });
+    expect(name.value).toEqual({
+      firstName: nameMock.firstName,
+      lastName: nameMock.lastName,
+    });
+    expect(name.fullName).toBe(`${nameMock.firstName} ${nameMock.lastName}`);
   });
 
-  it('should throw an invalid name error', () => {
-    const nameString = '';
-    expect(() => new Name(nameString)).toThrow(InvalidNameError);
+  it('should thrown a name error', () => {
+    const nameMock: NameFields = { firstName: 'Jhon', lastName: 'Test' };
+    expect(() => {
+      new Name(nameMock, { hasError: (): ValidationError => ({ name: 'name', message: 'name error' }) });
+    }).toThrow('name error');
   });
 });

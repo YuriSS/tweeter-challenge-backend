@@ -1,23 +1,25 @@
-import { InvalidNameError } from "@shared/domain/errors/invalid_name.error";
+import { Validation } from "@shared/domain/validation/validation";
 import { ValueObject } from "@shared/domain/value_objects/value_object";
 
-export class Name extends ValueObject<string> {
+export interface NameFields {
+  firstName: string;
+  lastName: string;
+}
 
-  private _name: string;
-
-  public constructor(name: string) {
-    super();
-    this._name = name;
-    this.validate();
+export class Name extends ValueObject<NameFields> {
+  public constructor(fields: NameFields, validation: Validation<NameFields>) {
+    super(fields, validation);
   }
 
-  public get value(): string {
-    return this._name;
+  public get firstName(): string {
+    return this.value.firstName;
   }
 
-  protected validate() {
-    if (this._name === '') {
-      throw new InvalidNameError();
-    }
+  public get lastName(): string {
+    return this.value.lastName;
+  }
+
+  public get fullName(): string {
+    return `${this.firstName} ${this.lastName}`.trim();
   }
 }

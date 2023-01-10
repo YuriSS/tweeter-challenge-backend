@@ -1,24 +1,34 @@
-import { InvalidEmailError } from "@shared/domain/errors/invalid_email.error";
+import { Validation } from "@shared/domain/validation/validation";
 import { ValueObject } from "@shared/domain/value_objects/value_object";
 
+export interface EmailInfo {
+  username: string;
+  domain: string;
+}
+
 export class Email extends ValueObject<string> {
-
-  private validationRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-  private _email: string;
-
-  public constructor(email: string) {
-    super();
-    this._email = email;
-    this.validate();
+  public constructor(email: string, validation: Validation<string>) {
+    super(email, validation);
+  }
+  
+  public get domain(): string {
+    return this.splittedEmail[1];
   }
 
-  public get value(): string {
-    return this._email;
+  public get username(): string {
+    return this.splittedEmail[0];
   }
 
-  protected validate() {
-    if (!this.validationRegex.test(this._email)) {
-      throw new InvalidEmailError();
+
+  public get emailInfo(): EmailInfo {
+    return {
+      username: this.username,
+      domain: this.domain
     }
+  }
+
+  private get splittedEmail(): [string, string] {
+    const [username, domain] = this.value.split('@');
+    return [username, domain];
   }
 }
