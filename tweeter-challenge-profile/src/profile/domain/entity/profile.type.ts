@@ -4,7 +4,7 @@ import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 
 export interface ProfileEntityInput {
   id: Identifier;
-  user: Identifier;
+  userId: Identifier;
   name: Name;
   email: Email;
   biography?: string;

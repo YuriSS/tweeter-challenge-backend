@@ -13,7 +13,7 @@ describe("ProfileEntity", () => {
 
     expect(profile.name).toEqual(profileMock.name);
     expect(profile.email).toEqual(profileMock.email);
-    expect(profile.user).toEqual(profileMock.user);
+    expect(profile.userId).toEqual(profileMock.userId);
     expect(profile.id).toEqual(profileMock.id);
     expect(profile.biography).toBe("");
   });

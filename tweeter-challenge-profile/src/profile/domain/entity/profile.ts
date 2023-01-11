@@ -11,8 +11,8 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
     super(fields, validator, 'Profile');
   }
 
-  public get user(): Identifier {
-    return this._fields.user;
+  public get userId(): Identifier {
+    return this._fields.userId;
   }
 
   public get name(): Name {
@@ -30,7 +30,7 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
   protected override mountFields(fields: ProfileEntityInput): ProfileEntityFields {
     return {
       id: fields.id,
-      user: fields.user,
+      userId: fields.userId,
       name: fields.name,
       email: fields.email,
       biography: fields.biography || '',
