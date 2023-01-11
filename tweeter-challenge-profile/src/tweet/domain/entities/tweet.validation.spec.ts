@@ -12,7 +12,7 @@ describe("TweetValidation", () => {
     const validator = createFakeValidator();
     const isValidIdentifierSpy = jest.spyOn(validator, 'isValidIdentifier');
 
-    TweetValidationFactory.create(validator).validate(tweetMock, context);
+    TweetValidationFactory.create(validator).configureValidation(tweetMock, context);
 
     expect(isValidIdentifierSpy).toHaveBeenCalledTimes(1);
     expect(isValidIdentifierSpy).toHaveBeenCalledWith({ value: tweetMock.id, context });
@@ -24,7 +24,7 @@ describe("TweetValidation", () => {
     const minSringLengthSpy = jest.spyOn(validator, 'minSringLength');
     const maxStringLengthSpy = jest.spyOn(validator, 'maxStringLength');
 
-    TweetValidationFactory.create(validator).validate(tweetMock, context);
+    TweetValidationFactory.create(validator).configureValidation(tweetMock, context);
 
     expect(minSringLengthSpy).toHaveBeenCalledTimes(1);
     expect(minSringLengthSpy).toHaveBeenCalledWith({ value: tweetMock.text, min: 1, context });
@@ -41,7 +41,7 @@ describe("TweetValidation", () => {
     const validator = createFakeValidator();
     const isValidIdentifierSpy = jest.spyOn(validator, 'isValidIdentifier');
 
-    TweetValidationFactory.create(validator).validate(tweetMock, context);
+    TweetValidationFactory.create(validator).configureValidation(tweetMock, context);
 
     expect(isValidIdentifierSpy).toHaveBeenCalledTimes(3);
     expect(isValidIdentifierSpy.mock.calls).toEqual([

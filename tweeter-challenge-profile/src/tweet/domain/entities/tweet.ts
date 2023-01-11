@@ -36,6 +36,6 @@ export class TweetEntity extends Entity<TweetEntityInput, TweetEntityFields> {
   }
 
   protected override configureValidation(): Validator {
-    return TweetValidationFactory.create(this.validator).validate(this._fields, this.entityName);
+    return TweetValidationFactory.create(this.validator).configureValidation(this._fields, this.entityName);
   }
 }

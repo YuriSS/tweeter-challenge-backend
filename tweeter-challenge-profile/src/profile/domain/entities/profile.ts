@@ -29,7 +29,7 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
     return this._fields.tweets;
   }
 
-  protected override mountFields(fields: ProfileEntityInput): Required<ProfileEntityInput> {
+  protected override mountFields(fields: ProfileEntityInput): ProfileEntityFields {
     return {
       id: fields.id,
       user: fields.user,
@@ -41,6 +41,6 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
   }
 
   protected override configureValidation(): Validator {
-    return ProfileValidationFactory.create(this.validator).validate(this._fields, this.entityName);
+    return ProfileValidationFactory.create(this.validator).configureValidation(this._fields, this.entityName);
   }
 }

@@ -6,7 +6,7 @@ import { ProfileEntityFields } from "@profile/domain/entities/profile.type";
 export class ProfileValidation implements EntityValidation<ProfileEntityFields> {
   public constructor(private validator: Validator) {}
 
-  public validate(fields: ProfileEntityFields, context: string): Validator {
+  public configureValidation(fields: ProfileEntityFields, context: string): Validator {
     this.validateIdentifier(fields, context)
       .validateEmail(fields, context)
       .validateName(fields, context)

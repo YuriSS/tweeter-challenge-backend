@@ -6,7 +6,7 @@ import { TweetEntityFields } from "@tweet/domain/entities/tweet.types";
 export class TweetValidation implements EntityValidation<TweetEntityFields> {
   public constructor(private validator: Validator) {}
 
-  public validate(fields: TweetEntityFields, context: string): Validator {
+  public configureValidation(fields: TweetEntityFields, context: string): Validator {
     this.validateIdentifier(fields, context)
       .validateComments(fields, context)
       .validateText(fields, context)
