@@ -27,10 +27,6 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
     return this._fields.biography;
   }
 
-  public get tweets(): Identifier[] {
-    return this._fields.tweets;
-  }
-
   protected override mountFields(fields: ProfileEntityInput): ProfileEntityFields {
     return {
       id: fields.id,
@@ -38,7 +34,6 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
       name: fields.name,
       email: fields.email,
       biography: fields.biography || '',
-      tweets: fields.tweets || []
     }
   }
 

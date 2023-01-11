@@ -10,7 +10,7 @@ describe("ProfileValidation", () => {
   const context = "Profile";
 
   it("should validate identifier", () => {
-    const profileMock = createMock<ProfileEntityFields>({ id: new Identifier({ id: "test" }), tweets: [] });
+    const profileMock = createMock<ProfileEntityFields>({ id: new Identifier({ id: "test" }) });
     const validator = createFakeValidator();
     const isValidIdentifierSpy = jest.spyOn(validator, "isValidIdentifier");
 
@@ -55,22 +55,5 @@ describe("ProfileValidation", () => {
 
     expect(maxSringLengthSpy).toHaveBeenCalledTimes(1);
     expect(maxSringLengthSpy).toHaveBeenCalledWith({ value: profileMock.biography, max: 255, context });
-  });
-
-  it("should validate tweets", () => {
-    const profileMock = createMock<ProfileEntityFields>({
-      id: new Identifier({ id: "id" }),
-      tweets: [new Identifier({ id: "t1" }), new Identifier({ id: "t2" })]
-    });
-    const validator = createFakeValidator();
-    const isValidIdentifierSpy = jest.spyOn(validator, "isValidIdentifier");
-
-    ProfileValidationFactory.create(validator).validateTweets(profileMock, context);
-
-    expect(isValidIdentifierSpy).toHaveBeenCalledTimes(2);
-    expect(isValidIdentifierSpy.mock.calls).toEqual([
-      [{ value: new Identifier({ id: "t1" }), context }],
-      [{ value: new Identifier({ id: "t2" }), context }],
-    ]);
   });
 });

@@ -5,7 +5,7 @@ export interface TweetEntityInput {
   text: string;
   updatedAt?: Date;
   createdAt?: Date;
-  comments?: Identifier[];
+  parent?: Identifier;
 }
 
-export type TweetEntityFields = Required<TweetEntityInput>;
+export type TweetEntityFields = Required<Omit<TweetEntityInput, "parent">> & { parent?: Identifier };

@@ -1,6 +1,5 @@
 import { EntityValidation } from "@shared/domain/entities/entity.type";
 import { Validator } from "@shared/domain/validator/validator";
-import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { ProfileEntityFields } from "@profile/domain/entity/profile.type";
 
 export class ProfileValidation implements EntityValidation<ProfileEntityFields> {
@@ -11,7 +10,6 @@ export class ProfileValidation implements EntityValidation<ProfileEntityFields> 
       .validateEmail(fields, context)
       .validateName(fields, context)
       .validateBiography(fields, context)
-      .validateTweets(fields, context);
 
     return this.validator;
   }
@@ -36,13 +34,6 @@ export class ProfileValidation implements EntityValidation<ProfileEntityFields> 
   public validateBiography(fields: ProfileEntityFields, context: string): ProfileValidation {
     this.validator
       .maxStringLength({ value: fields.biography, max: 255, context });
-    return this;
-  }
-
-  public validateTweets(fields: ProfileEntityFields, context: string): ProfileValidation {
-    fields.tweets.forEach((tweetId: Identifier) => {
-      this.validator.isValidIdentifier({ value: tweetId, context });
-    });
     return this;
   }
 }

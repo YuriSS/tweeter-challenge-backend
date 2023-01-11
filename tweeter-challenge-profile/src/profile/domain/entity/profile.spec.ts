@@ -6,7 +6,6 @@ import { createMock } from "ts-auto-mock"
 describe("ProfileEntity", () => {
   it("should instance correctly a profile", () => {
     const profileMock = createMock<ProfileEntityInput>({
-      tweets: undefined,
       biography: undefined,
     });
 
@@ -16,7 +15,6 @@ describe("ProfileEntity", () => {
     expect(profile.email).toEqual(profileMock.email);
     expect(profile.user).toEqual(profileMock.user);
     expect(profile.id).toEqual(profileMock.id);
-    expect(profile.tweets).toEqual([]);
     expect(profile.biography).toBe("");
   });
 });

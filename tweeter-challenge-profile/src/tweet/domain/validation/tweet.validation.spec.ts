@@ -8,7 +8,7 @@ describe("TweetValidation", () => {
   const context = 'Tweet';
 
   it("should validate identifier", () => {
-    const tweetMock = createMock<TweetEntityFields>({ id: new Identifier({ id: 'test' }), comments: [] });
+    const tweetMock = createMock<TweetEntityFields>({ id: new Identifier({ id: 'test' }), parent: undefined });
     const validator = createFakeValidator();
     const isValidIdentifierSpy = jest.spyOn(validator, 'isValidIdentifier');
 
@@ -19,7 +19,7 @@ describe("TweetValidation", () => {
   });
 
   it("should validate text", () => {
-    const tweetMock = createMock<TweetEntityFields>({ text: "Testing text", comments: [] });
+    const tweetMock = createMock<TweetEntityFields>({ text: "Testing text" });
     const validator = createFakeValidator();
     const minSringLengthSpy = jest.spyOn(validator, 'minSringLength');
     const maxStringLengthSpy = jest.spyOn(validator, 'maxStringLength');
@@ -33,21 +33,20 @@ describe("TweetValidation", () => {
     expect(maxStringLengthSpy).toHaveBeenCalledWith({ value: tweetMock.text, max: 255, context });
   });
 
-  it("should validate comments", () => {
+  it("should validate parent", () => {
     const tweetMock = createMock<TweetEntityFields>({
       id: new Identifier({ id: 'id' }),
-      comments: [new Identifier({ id: 'c1' }), new Identifier({ id: 'c2' })]
+      parent: new Identifier({ id: 'p1' })
     });
     const validator = createFakeValidator();
     const isValidIdentifierSpy = jest.spyOn(validator, 'isValidIdentifier');
 
     TweetValidationFactory.create(validator).configureValidation(tweetMock, context);
 
-    expect(isValidIdentifierSpy).toHaveBeenCalledTimes(3);
+    expect(isValidIdentifierSpy).toHaveBeenCalledTimes(2);
     expect(isValidIdentifierSpy.mock.calls).toEqual([
       [{ value: tweetMock.id, context }],
-      [{ value: new Identifier({ id: 'c1' }), context }],
-      [{ value: new Identifier({ id: 'c2' }), context }],
+      [{ value: tweetMock.parent, context }],
     ]);
   });
 

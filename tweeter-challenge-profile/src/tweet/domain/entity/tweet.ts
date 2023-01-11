@@ -13,10 +13,6 @@ export class TweetEntity extends Entity<TweetEntityInput, TweetEntityFields> {
     return this._fields.text;
   }
 
-  public get comments(): Identifier[] {
-    return this._fields.comments;
-  }
-
   public get updatedAt(): Date {
     return this._fields.updatedAt;
   }
@@ -25,13 +21,17 @@ export class TweetEntity extends Entity<TweetEntityInput, TweetEntityFields> {
     return this._fields.createdAt;
   }
 
+  public get parent(): Identifier | undefined {
+    return this._fields.parent;
+  }
+
   protected override mountFields(fields: TweetEntityInput): TweetEntityFields {
     return {
       id: fields.id,
       text: fields.text,
+      parent: fields.parent,
       updatedAt: fields.updatedAt || new Date(),
       createdAt: fields.createdAt || new Date(),
-      comments: fields.comments || [],
     }
   }
 

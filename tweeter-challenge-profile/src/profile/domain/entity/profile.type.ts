@@ -8,7 +8,6 @@ export interface ProfileEntityInput {
   name: Name;
   email: Email;
   biography?: string;
-  tweets?: Identifier[];
 }
 
 export type ProfileEntityFields = Required<ProfileEntityInput>;

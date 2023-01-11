@@ -17,11 +17,11 @@ describe('TweetEntity', () => {
     const tweetMock = createMock<TweetEntity>({
       createdAt: undefined,
       updatedAt: undefined,
-      comments: undefined,
+      parent: undefined,
     });
     const tweet = new TweetEntity(tweetMock, createFakeValidator());
 
-    expect(tweet.comments).toEqual([]);
+    expect(tweet.parent).toBeUndefined();
     expect(tweet.text).toBe(tweetMock.text);
     expect(tweet.createdAt).toEqual(date);
     expect(tweet.updatedAt).toEqual(date);
