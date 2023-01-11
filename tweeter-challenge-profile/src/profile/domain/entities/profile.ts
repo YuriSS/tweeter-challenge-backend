@@ -1,16 +1,16 @@
 import { Entity } from "@shared/domain/entities/entity";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
+import { ProfileEntityFields, ProfileEntityInput } from "@profile/domain/entities/profile.type";
+import { Validator } from "@shared/domain/validation/validation";
+import { ProfileValidationFactory } from "@profile/domain/entities/profile.validation";
 
-export interface ProfileEntityFields {
-  name: string;
-  email: string;
-  bio?: string;
-  tweets?: Identifier[];
-}
+export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityFields> {
+  public constructor(fields: ProfileEntityInput, protected validator: Validator) {
+    super(fields, validator, 'Profile');
+  }
 
-export class ProfileEntity extends Entity<ProfileEntityFields, Required<ProfileEntityFields>> {
-  public constructor(fields: ProfileEntityFields, id: Identifier ) {
-    super(fields, id);
+  public get user(): Identifier {
+    return this._fields.user;
   }
 
   public get name(): string {
@@ -21,20 +21,26 @@ export class ProfileEntity extends Entity<ProfileEntityFields, Required<ProfileE
     return this._fields.email;
   }
 
-  public get bio(): string {
-    return this._fields.bio;
+  public get biography(): string {
+    return this._fields.biography;
   }
 
   public get tweets(): Identifier[] {
     return this._fields.tweets;
   }
 
-  protected override mountFields(fields: ProfileEntityFields): Required<ProfileEntityFields> {
+  protected override mountFields(fields: ProfileEntityInput): Required<ProfileEntityInput> {
     return {
+      id: fields.id,
+      user: fields.user,
       name: fields.name,
       email: fields.email,
-      bio: fields.bio || '',
+      biography: fields.biography || '',
       tweets: fields.tweets || []
     }
+  }
+
+  protected override configureValidation(): Validator {
+    return ProfileValidationFactory.create(this.validator).validate(this._fields, this.entityName);
   }
 }

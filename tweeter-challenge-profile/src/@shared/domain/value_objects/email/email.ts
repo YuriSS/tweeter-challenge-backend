@@ -1,4 +1,3 @@
-import { Validation } from "@shared/domain/validation/validation";
 import { ValueObject } from "@shared/domain/value_objects/value_object";
 
 export interface EmailInfo {
@@ -7,8 +6,8 @@ export interface EmailInfo {
 }
 
 export class Email extends ValueObject<string> {
-  public constructor(email: string, validation: Validation<string>) {
-    super(email, validation);
+  public constructor(email: string) {
+    super(email);
   }
   
   public get domain(): string {

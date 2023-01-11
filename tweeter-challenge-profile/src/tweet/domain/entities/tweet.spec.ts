@@ -1,6 +1,6 @@
 import { createMock } from "ts-auto-mock";
 import { TweetEntity } from "@tweet/domain/entities/tweet";
-import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
+import { createFakeValidator } from "@shared/domain/validation/validation";
 
 describe('TweetEntity', () => {
   const date = new Date();
@@ -17,15 +17,14 @@ describe('TweetEntity', () => {
     const tweetMock = createMock<TweetEntity>({
       createdAt: undefined,
       updatedAt: undefined,
-      retweets: undefined,
+      comments: undefined,
     });
-    const id = new Identifier({ id: '1' }, { hasError: (): undefined => undefined });
-    const tweet = new TweetEntity(tweetMock, id);
+    const tweet = new TweetEntity(tweetMock, createFakeValidator());
 
-    expect(tweet.retweets).toEqual([]);
+    expect(tweet.comments).toEqual([]);
     expect(tweet.text).toBe(tweetMock.text);
     expect(tweet.createdAt).toEqual(date);
     expect(tweet.updatedAt).toEqual(date);
-    expect(tweet.id).toBeInstanceOf(Identifier);
+    expect(tweet.id).toEqual(tweetMock.id);
   });
-})
+});

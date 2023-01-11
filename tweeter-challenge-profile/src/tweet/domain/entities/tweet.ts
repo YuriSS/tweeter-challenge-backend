@@ -1,24 +1,20 @@
 import { Entity } from "@shared/domain/entities/entity";
+import { Validator } from "@shared/domain/validation/validation";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
+import { TweetEntityFields, TweetEntityInput } from "@tweet/domain/entities/tweet.types";
+import { TweetValidationFactory } from "@tweet/domain/entities/tweet.validation";
 
-export interface TweetEntityFields {
-  text: string;
-  updatedAt?: Date;
-  createdAt?: Date;
-  retweets?: Identifier[];
-}
-
-export class TweetEntity extends Entity<TweetEntityFields, Required<TweetEntityFields>> {
-  public constructor(fields: TweetEntityFields, id: Identifier) {
-    super(fields, id);
+export class TweetEntity extends Entity<TweetEntityInput, TweetEntityFields> {
+  public constructor(fields: TweetEntityFields, protected validator: Validator) {
+    super(fields, validator, 'Tweet');
   }
 
   public get text(): string {
     return this._fields.text;
   }
 
-  public get retweets(): Identifier[] {
-    return this._fields.retweets;
+  public get comments(): Identifier[] {
+    return this._fields.comments;
   }
 
   public get updatedAt(): Date {
@@ -29,12 +25,17 @@ export class TweetEntity extends Entity<TweetEntityFields, Required<TweetEntityF
     return this._fields.createdAt;
   }
 
-  protected override mountFields(fields: TweetEntityFields): Required<TweetEntityFields> {
+  protected override mountFields(fields: TweetEntityInput): TweetEntityFields {
     return {
+      id: fields.id,
       text: fields.text,
       updatedAt: fields.updatedAt || new Date(),
       createdAt: fields.createdAt || new Date(),
-      retweets: fields.retweets || [],
+      comments: fields.comments || [],
     }
+  }
+
+  protected override configureValidation(): Validator {
+    return TweetValidationFactory.create(this.validator).validate(this._fields, this.entityName);
   }
 }

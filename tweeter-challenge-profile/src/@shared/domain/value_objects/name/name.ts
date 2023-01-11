@@ -1,4 +1,3 @@
-import { Validation } from "@shared/domain/validation/validation";
 import { ValueObject } from "@shared/domain/value_objects/value_object";
 
 export interface NameFields {
@@ -7,8 +6,8 @@ export interface NameFields {
 }
 
 export class Name extends ValueObject<NameFields> {
-  public constructor(fields: NameFields, validation: Validation<NameFields>) {
-    super(fields, validation);
+  public constructor(fields: NameFields) {
+    super(fields);
   }
 
   public get firstName(): string {

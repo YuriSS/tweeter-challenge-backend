@@ -1,4 +1,3 @@
-import { Validation } from "@shared/domain/validation/validation";
 import { ValueObject } from "@shared/domain/value_objects/value_object";
 
 export interface UniqueId {
@@ -6,7 +5,7 @@ export interface UniqueId {
 }
 
 export class Identifier extends ValueObject<UniqueId> {
-  public constructor(id: UniqueId, validation: Validation<UniqueId>) {
-    super(id, validation);
+  public constructor(id: UniqueId) {
+    super(id);
   }
 }
