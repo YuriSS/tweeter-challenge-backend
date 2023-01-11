@@ -1,5 +1,5 @@
 import { Entity } from "@shared/domain/entities/entity";
-import { Validator } from "@shared/domain/validation/validation";
+import { Validator } from "@shared/domain/validator/validator";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { TweetEntityFields, TweetEntityInput } from "@tweet/domain/entity/tweet.types";
 import { TweetValidationFactory } from "@tweet/domain/validation/tweet.validation";

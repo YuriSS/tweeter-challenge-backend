@@ -1,6 +1,6 @@
 import { ProfileEntity } from "@profile/domain/entity/profile"
 import { ProfileEntityInput } from "@profile/domain/entity/profile.type"
-import { createFakeValidator } from "@shared/domain/validation/validation";
+import { createFakeValidator } from "@shared/domain/validator/validator";
 import { createMock } from "ts-auto-mock"
 
 describe("ProfileEntity", () => {

@@ -1,7 +1,7 @@
 import { Entity } from "@shared/domain/entities/entity";
 import { createMock } from "ts-auto-mock";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
-import { createFakeValidator, Validator } from "../validation/validation";
+import { createFakeValidator, Validator } from "@shared/domain/validator/validator";
 
 describe('Entity', () => {
   it('should create entity with default inputs', () => {

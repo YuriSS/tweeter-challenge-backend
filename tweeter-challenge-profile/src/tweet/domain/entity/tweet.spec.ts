@@ -1,6 +1,6 @@
 import { createMock } from "ts-auto-mock";
 import { TweetEntity } from "@tweet/domain/entity/tweet";
-import { createFakeValidator } from "@shared/domain/validation/validation";
+import { createFakeValidator } from "@shared/domain/validator/validator";
 
 describe('TweetEntity', () => {
   const date = new Date();

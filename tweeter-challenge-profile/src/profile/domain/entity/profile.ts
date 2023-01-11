@@ -1,7 +1,7 @@
 import { Entity } from "@shared/domain/entities/entity";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { ProfileEntityFields, ProfileEntityInput } from "@profile/domain/entity/profile.type";
-import { Validator } from "@shared/domain/validation/validation";
+import { Validator } from "@shared/domain/validator/validator";
 import { ProfileValidationFactory } from "@profile/domain/validation/profile.validation";
 import { Name } from "@shared/domain/value_objects/name/name";
 import { Email } from "@shared/domain/value_objects/email/email";

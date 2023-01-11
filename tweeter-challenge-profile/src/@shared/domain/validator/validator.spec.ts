@@ -1,4 +1,4 @@
-import { createFakeValidator, ValidationErrorFields, ValidatorFields } from "@shared/domain/validation/validation";
+import { createFakeValidator, ValidationErrorFields, ValidatorFields } from "@shared/domain/validator/validator";
 import { createMock, createMockList } from "ts-auto-mock";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 

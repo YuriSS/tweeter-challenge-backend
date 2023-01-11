@@ -1,4 +1,4 @@
-import { ValidationErrorFields } from "../validation/validation";
+import { ValidationErrorFields } from "@shared/domain/validator/validator";
 
 export class ValidationError extends Error {
   public constructor(public errors: ValidationErrorFields[], name?: string) {

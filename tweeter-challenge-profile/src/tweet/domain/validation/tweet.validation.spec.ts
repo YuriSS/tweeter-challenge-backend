@@ -1,7 +1,7 @@
 import { createMock } from "ts-auto-mock";
 import { TweetEntityFields } from "@tweet/domain/entity/tweet.types";
 import { TweetValidationFactory } from "@tweet/domain/validation/tweet.validation";
-import { createFakeValidator } from "@shared/domain/validation/validation";
+import { createFakeValidator } from "@shared/domain/validator/validator";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 
 describe("TweetValidation", () => {

@@ -1,5 +1,5 @@
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
-import { Validator } from "@shared/domain/validation/validation";
+import { Validator } from "@shared/domain/validator/validator";
 import { ValidationError } from "@shared/domain/errors/validation.error";
 
 export abstract class Entity<InputProps extends { id: Identifier }, Props extends { id: Identifier }> {

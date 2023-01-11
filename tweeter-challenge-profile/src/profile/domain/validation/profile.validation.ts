@@ -1,5 +1,5 @@
 import { EntityValidation } from "@shared/domain/entities/entity.type";
-import { Validator } from "@shared/domain/validation/validation";
+import { Validator } from "@shared/domain/validator/validator";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { ProfileEntityFields } from "@profile/domain/entity/profile.type";
 
