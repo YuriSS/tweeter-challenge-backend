@@ -1,8 +1,8 @@
 import { Entity } from "@shared/domain/entities/entity";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
-import { ProfileEntityFields, ProfileEntityInput } from "@profile/domain/entities/profile.type";
+import { ProfileEntityFields, ProfileEntityInput } from "@profile/domain/entity/profile.type";
 import { Validator } from "@shared/domain/validation/validation";
-import { ProfileValidationFactory } from "@profile/domain/entities/profile.validation";
+import { ProfileValidationFactory } from "@profile/domain/validation/profile.validation";
 
 export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityFields> {
   public constructor(fields: ProfileEntityInput, protected validator: Validator) {

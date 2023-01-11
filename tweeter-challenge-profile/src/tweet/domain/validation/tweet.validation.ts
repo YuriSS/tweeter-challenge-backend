@@ -1,7 +1,7 @@
 import { EntityValidation } from "@shared/domain/entities/entity.type";
 import { Validator } from "@shared/domain/validation/validation";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
-import { TweetEntityFields } from "@tweet/domain/entities/tweet.types";
+import { TweetEntityFields } from "@tweet/domain/entity/tweet.types";
 
 export class TweetValidation implements EntityValidation<TweetEntityFields> {
   public constructor(private validator: Validator) {}

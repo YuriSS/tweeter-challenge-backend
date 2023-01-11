@@ -1,8 +1,8 @@
 import { createFakeValidator } from "@shared/domain/validation/validation";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { createMock } from "ts-auto-mock";
-import { ProfileEntityFields } from "./profile.type";
-import { ProfileValidationFactory } from "./profile.validation";
+import { ProfileEntityFields } from "@profile/domain/entity/profile.type";
+import { ProfileValidationFactory } from "@profile/domain/validation/profile.validation";
 
 describe("ProfileValidation", () => {
   const context = "Profile";

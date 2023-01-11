@@ -1,5 +1,5 @@
-import { ProfileEntity } from "@profile/domain/entities/profile"
-import { ProfileEntityInput } from "@profile/domain/entities/profile.type"
+import { ProfileEntity } from "@profile/domain/entity/profile"
+import { ProfileEntityInput } from "@profile/domain/entity/profile.type"
 import { createFakeValidator } from "@shared/domain/validation/validation";
 import { createMock } from "ts-auto-mock"
 

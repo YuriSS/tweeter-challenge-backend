@@ -1,5 +1,5 @@
 import { createMock } from "ts-auto-mock";
-import { TweetEntity } from "@tweet/domain/entities/tweet";
+import { TweetEntity } from "@tweet/domain/entity/tweet";
 import { createFakeValidator } from "@shared/domain/validation/validation";
 
 describe('TweetEntity', () => {
