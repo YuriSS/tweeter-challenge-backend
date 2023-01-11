@@ -3,6 +3,8 @@ import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { createMock } from "ts-auto-mock";
 import { ProfileEntityFields } from "@profile/domain/entity/profile.type";
 import { ProfileValidationFactory } from "@profile/domain/validation/profile.validation";
+import { Email } from "@shared/domain/value_objects/email/email";
+import { Name } from "@shared/domain/value_objects/name/name";
 
 describe("ProfileValidation", () => {
   const context = "Profile";
@@ -19,18 +21,18 @@ describe("ProfileValidation", () => {
   });
 
   it("should validate email", () => {
-    const profileMock = createMock<ProfileEntityFields>({ email: "test" });
+    const profileMock = createMock<ProfileEntityFields>({ email: new Email("test") });
     const validator = createFakeValidator();
     const isValidEmailSpy = jest.spyOn(validator, "isValidEmail");
 
     ProfileValidationFactory.create(validator).validateEmail(profileMock, context);
 
     expect(isValidEmailSpy).toHaveBeenCalledTimes(1);
-    expect(isValidEmailSpy).toHaveBeenCalledWith({ value: profileMock.email, context });
+    expect(isValidEmailSpy).toHaveBeenCalledWith({ value: profileMock.email.value, context });
   });
 
   it("should validate name", () => {
-    const profileMock = createMock<ProfileEntityFields>({ name: "name" });
+    const profileMock = createMock<ProfileEntityFields>({ name: new Name({ firstName: "Jhon", lastName: "Tester" }) });
     const validator = createFakeValidator();
     const minSringLengthSpy = jest.spyOn(validator, "minSringLength");
     const maxStringLengthSpy = jest.spyOn(validator, "maxStringLength");
@@ -38,10 +40,10 @@ describe("ProfileValidation", () => {
     ProfileValidationFactory.create(validator).validateName(profileMock, context);
 
     expect(minSringLengthSpy).toHaveBeenCalledTimes(1);
-    expect(minSringLengthSpy).toHaveBeenCalledWith({ value: profileMock.name, min: 1, context });
+    expect(minSringLengthSpy).toHaveBeenCalledWith({ value: profileMock.name.fullName, min: 1, context });
 
     expect(maxStringLengthSpy).toHaveBeenCalledTimes(1);
-    expect(maxStringLengthSpy).toHaveBeenCalledWith({ value: profileMock.name, max: 255, context });
+    expect(maxStringLengthSpy).toHaveBeenCalledWith({ value: profileMock.name.fullName, max: 255, context });
   });
 
   it("should validate biography", () => {

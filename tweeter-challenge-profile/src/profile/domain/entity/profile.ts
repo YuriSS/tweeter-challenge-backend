@@ -3,6 +3,8 @@ import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { ProfileEntityFields, ProfileEntityInput } from "@profile/domain/entity/profile.type";
 import { Validator } from "@shared/domain/validation/validation";
 import { ProfileValidationFactory } from "@profile/domain/validation/profile.validation";
+import { Name } from "@shared/domain/value_objects/name/name";
+import { Email } from "@shared/domain/value_objects/email/email";
 
 export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityFields> {
   public constructor(fields: ProfileEntityInput, protected validator: Validator) {
@@ -13,11 +15,11 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
     return this._fields.user;
   }
 
-  public get name(): string {
+  public get name(): Name {
     return this._fields.name;
   }
 
-  public get email(): string {
+  public get email(): Email {
     return this._fields.email;
   }
 

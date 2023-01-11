@@ -22,14 +22,14 @@ export class ProfileValidation implements EntityValidation<ProfileEntityFields> 
   }
 
   public validateEmail(fields: ProfileEntityFields, context: string): ProfileValidation {
-    this.validator.isValidEmail({ value: fields.email, context });
+    this.validator.isValidEmail({ value: fields.email.value, context });
     return this;
   }
 
   public validateName(fields: ProfileEntityFields, context: string): ProfileValidation {
     this.validator
-      .minSringLength({ value: fields.name, min: 1, context })
-      .maxStringLength({ value: fields.name, max: 255, context });
+      .minSringLength({ value: fields.name.fullName, min: 1, context })
+      .maxStringLength({ value: fields.name.fullName, max: 255, context });
     return this;
   }
 
