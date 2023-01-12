@@ -1,5 +1,5 @@
 import { Entity } from "@shared/domain/entities/entity";
-import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
+import { Identifier, MakeIdentifier } from "@shared/domain/value_objects/uuid/uuid";
 import { ProfileEntityFields, ProfileEntityInput } from "@profile/domain/entity/profile.type";
 import { Validator } from "@shared/domain/validator/validator";
 import { ProfileValidationFactory } from "@profile/domain/validation/profile.validation";
@@ -7,8 +7,8 @@ import { Name } from "@shared/domain/value_objects/name/name";
 import { Email } from "@shared/domain/value_objects/email/email";
 
 export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityFields> {
-  public constructor(fields: ProfileEntityInput, protected validator: Validator) {
-    super(fields, validator, 'Profile');
+  public constructor(fields: ProfileEntityInput, protected validator: Validator, protected makeIdentifier: MakeIdentifier) {
+    super(fields, validator, makeIdentifier, 'Profile');
   }
 
   public get userId(): Identifier {
@@ -29,11 +29,13 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
 
   protected override mountFields(fields: ProfileEntityInput): ProfileEntityFields {
     return {
-      id: fields.id,
+      id: fields.id || this.makeIdentifier.make(),
       userId: fields.userId,
       name: fields.name,
       email: fields.email,
-      biography: fields.biography || '',
+      biography: fields.biography || "",
+      updatedAt: fields.updatedAt || new Date(),
+      createdAt: fields.createdAt || new Date(),
     }
   }
 

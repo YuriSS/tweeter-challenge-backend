@@ -4,8 +4,16 @@ export interface UniqueId {
   id: string;
 }
 
+export interface MakeIdentifier {
+  make: () => Identifier;
+}
+
 export class Identifier extends ValueObject<UniqueId> {
   public constructor(id: UniqueId) {
     super(id);
   }
 }
+
+export const createFakeIdentifier = (seed: number = 1): MakeIdentifier => ({
+  make: () => new Identifier({ id: `${seed++}e${Date.now()}` })
+});

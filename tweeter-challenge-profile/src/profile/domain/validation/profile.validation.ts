@@ -1,6 +1,7 @@
 import { EntityValidation } from "@shared/domain/entities/entity.type";
 import { Validator } from "@shared/domain/validator/validator";
 import { ProfileEntityFields } from "@profile/domain/entity/profile.type";
+import { DateRegistryValidationFactory } from "@shared/domain/validator/dateRegistry.validation";
 
 export class ProfileValidation implements EntityValidation<ProfileEntityFields> {
   public constructor(private validator: Validator) {}
@@ -9,7 +10,9 @@ export class ProfileValidation implements EntityValidation<ProfileEntityFields> 
     this.validateIdentifier(fields, context)
       .validateEmail(fields, context)
       .validateName(fields, context)
-      .validateBiography(fields, context)
+      .validateBiography(fields, context);
+
+    DateRegistryValidationFactory.create(this.validator).configureValidation(fields, context);
 
     return this.validator;
   }

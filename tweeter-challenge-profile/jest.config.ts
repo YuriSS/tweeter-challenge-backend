@@ -16,6 +16,7 @@ const jestConfig: JestConfigWithTsJest = {
   transform: {
     "^.+\\.ts?$": ["ts-jest", { compiler: "ttypescript" }]
   },
+  testEnvironment: "node"
 };
 
 export default jestConfig;

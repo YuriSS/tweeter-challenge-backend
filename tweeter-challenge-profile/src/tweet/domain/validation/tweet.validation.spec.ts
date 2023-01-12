@@ -3,6 +3,7 @@ import { TweetEntityFields } from "@tweet/domain/entity/tweet.types";
 import { TweetValidationFactory } from "@tweet/domain/validation/tweet.validation";
 import { createFakeValidator } from "@shared/domain/validator/validator";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
+import { DateRegistryValidation } from "@shared/domain/validator/dateRegistry.validation";
 
 describe("TweetValidation", () => {
   const context = 'Tweet';
@@ -31,6 +32,17 @@ describe("TweetValidation", () => {
 
     expect(maxStringLengthSpy).toHaveBeenCalledTimes(1);
     expect(maxStringLengthSpy).toHaveBeenCalledWith({ value: tweetMock.text, max: 255, context });
+  });
+
+  it("should validate createdAt and updatedAt", () => {
+    const tweetMock = createMock<TweetEntityFields>({ text: "Testing text" });
+    const validator = createFakeValidator();
+    const configureDateValidationSpy = jest.spyOn(DateRegistryValidation.prototype, "configureValidation");
+
+    TweetValidationFactory.create(validator).configureValidation(tweetMock, context);
+
+    expect(configureDateValidationSpy).toHaveBeenCalledTimes(1);
+    expect(configureDateValidationSpy).toHaveBeenCalledWith(tweetMock, context);
   });
 
   it("should validate parent", () => {

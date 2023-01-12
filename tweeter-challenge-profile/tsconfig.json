@@ -2,6 +2,7 @@
   "compilerOptions": {
     "incremental": true,
     "target": "es2017",
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "module": "commonjs",
     "baseUrl": ".",

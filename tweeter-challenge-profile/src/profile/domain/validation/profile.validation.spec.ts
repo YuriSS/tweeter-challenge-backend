@@ -5,6 +5,7 @@ import { ProfileEntityFields } from "@profile/domain/entity/profile.type";
 import { ProfileValidationFactory } from "@profile/domain/validation/profile.validation";
 import { Email } from "@shared/domain/value_objects/email/email";
 import { Name } from "@shared/domain/value_objects/name/name";
+import { DateRegistryValidation } from "@shared/domain/validator/dateRegistry.validation";
 
 describe("ProfileValidation", () => {
   const context = "Profile";
@@ -56,4 +57,17 @@ describe("ProfileValidation", () => {
     expect(maxSringLengthSpy).toHaveBeenCalledTimes(1);
     expect(maxSringLengthSpy).toHaveBeenCalledWith({ value: profileMock.biography, max: 255, context });
   });
+
+  it("should validate createdAt and updatedAt", () => {
+    const profileMock = createMock<ProfileEntityFields>({ email: new Email("test"), name: new Name({ firstName: "test", lastName: "test" }) });
+    const validator = createFakeValidator();
+    const configureDateValidationSpy = jest.spyOn(DateRegistryValidation.prototype, "configureValidation");
+
+    ProfileValidationFactory.create(validator).configureValidation(profileMock, context);
+
+    expect(configureDateValidationSpy).toHaveBeenCalledTimes(1);
+    expect(configureDateValidationSpy).toHaveBeenCalledWith(profileMock, context);
+  });
+
+
 });

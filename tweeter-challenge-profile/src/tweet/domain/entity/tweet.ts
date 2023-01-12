@@ -1,24 +1,16 @@
 import { Entity } from "@shared/domain/entities/entity";
 import { Validator } from "@shared/domain/validator/validator";
-import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
+import { Identifier, MakeIdentifier } from "@shared/domain/value_objects/uuid/uuid";
 import { TweetEntityFields, TweetEntityInput } from "@tweet/domain/entity/tweet.types";
 import { TweetValidationFactory } from "@tweet/domain/validation/tweet.validation";
 
 export class TweetEntity extends Entity<TweetEntityInput, TweetEntityFields> {
-  public constructor(fields: TweetEntityFields, protected validator: Validator) {
-    super(fields, validator, 'Tweet');
+  public constructor(fields: TweetEntityFields, protected validator: Validator, protected makeIdentifier: MakeIdentifier) {
+    super(fields, validator, makeIdentifier, 'Tweet');
   }
 
   public get text(): string {
     return this._fields.text;
-  }
-
-  public get updatedAt(): Date {
-    return this._fields.updatedAt;
-  }
-
-  public get createdAt(): Date {
-    return this._fields.createdAt;
   }
 
   public get parent(): Identifier | undefined {
@@ -27,7 +19,7 @@ export class TweetEntity extends Entity<TweetEntityInput, TweetEntityFields> {
 
   protected override mountFields(fields: TweetEntityInput): TweetEntityFields {
     return {
-      id: fields.id,
+      id: fields.id || this.makeIdentifier.make(),
       text: fields.text,
       parent: fields.parent,
       updatedAt: fields.updatedAt || new Date(),

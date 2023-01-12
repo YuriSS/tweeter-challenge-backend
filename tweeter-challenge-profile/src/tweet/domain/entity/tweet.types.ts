@@ -1,7 +1,7 @@
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 
 export interface TweetEntityInput {
-  id: Identifier;
+  id?: Identifier;
   text: string;
   updatedAt?: Date;
   createdAt?: Date;
