@@ -15,6 +15,9 @@
       ],
       "@tweet/*": [
         "src/tweet/*"
+      ],
+      "@user/*": [
+        "src/user/*"
       ]
     },
     "resolveJsonModule": true,

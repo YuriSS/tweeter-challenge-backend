@@ -1,11 +1,14 @@
 import { ProfileEntity } from "@profile/domain/entity/profile"
-import { ProfileRepository as ProfileRepositoryContract } from "@profile/domain/repository/profile.repository"
+import { ProfileModel, ProfileRepositoryContract } from "@profile/domain/repository/profile.repository"
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid"
-import { ProfileModel } from "@profile/infrastructure/repository/sequelize/profile.model";
+import { ProfileSequelizeModel } from "@profile/infrastructure/repository/sequelize/profile.repository.model";
+import { NotFoundError } from "@shared/domain/errors/repository/not_found.error";
 
 export class ProfileRepository implements ProfileRepositoryContract {
+  private scope = 'Profile';
+
   public async create(entity: ProfileEntity): Promise<void> {
-    await ProfileModel.create({
+    await ProfileSequelizeModel.create({
       id: entity.id.value.id,
       userId: entity.userId.value.id,
       firstName: entity.name.firstName,
@@ -18,7 +21,7 @@ export class ProfileRepository implements ProfileRepositoryContract {
   }
 
   public async update(entity: ProfileEntity): Promise<void> {
-    await ProfileModel.update({
+    await ProfileSequelizeModel.update({
       userId: entity.userId.value.id,
       firstName: entity.name.firstName,
       lastName: entity.name.lastName,
@@ -31,12 +34,29 @@ export class ProfileRepository implements ProfileRepositoryContract {
     });
   }
 
-  public async find(id: Identifier): Promise<ProfileEntity> {
-    await ProfileModel.findOne({ where: { id: id.value.id }});
+  public async find(id: Identifier): Promise<ProfileModel> {
+    const value = id.value.id;
+    const profileSequelizeModel = await ProfileSequelizeModel.findOne({ where: { id: value }});
+    if (!profileSequelizeModel) {
+      throw new NotFoundError({ field: 'id', value, scope: this.scope });
+    }
+    return this.createProfileModel(profileSequelizeModel);
+  }
+
+  public findAll(): Promise<ProfileModel[]> {
     throw new Error("Not implemented yet");
   }
 
-  public findAll(): Promise<ProfileEntity[]> {
-    throw new Error("Not implemented yet");
+  private createProfileModel(model: ProfileSequelizeModel): ProfileModel {
+    return {
+      id: model.id,
+      userId: model.userId,
+      firstName: model.firstName,
+      lastName: model.lastName,
+      email: model.email,
+      biography: model.biography,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
+    }
   }
 }

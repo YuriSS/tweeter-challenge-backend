@@ -1,15 +1,18 @@
-import { Column, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { ProfileModel } from "@profile/domain/repository/profile.repository";
+import { UserSequelizeModel } from "@user/infrastructure/repository/user.repository.model";
+import { Column, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
 
 @Table({
   tableName: "profile",
 
 })
-export class ProfileModel extends Model {
+export class ProfileSequelizeModel extends Model<ProfileModel> {
 
   @PrimaryKey
   @Column
   declare id: string;
 
+  @ForeignKey(() => UserSequelizeModel)
   @Column({ allowNull: false })
   declare userId: string;
 

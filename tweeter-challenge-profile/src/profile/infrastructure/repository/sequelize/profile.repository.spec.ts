@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize-typescript";
-import { ProfileModel } from "@profile/infrastructure/repository/sequelize/profile.model";
+import { ProfileSequelizeModel } from "@profile/infrastructure/repository/sequelize/profile.repository.model";
 import { ProfileRepository } from "@profile/infrastructure/repository/sequelize/profile.repository";
 import { ProfileEntity } from "@profile/domain/entity/profile";
 import { createFakeValidator } from "@shared/domain/validator/validator";
@@ -20,7 +20,7 @@ describe("Profile Repository", () => {
       logging: false,
       sync: { force: true}
     });
-    sequelize.addModels([ProfileModel]);
+    sequelize.addModels([ProfileSequelizeModel]);
     await sequelize.sync();
   });
 
@@ -37,7 +37,7 @@ describe("Profile Repository", () => {
 
     await profileRepository.create(profile);
 
-    const profileModel = await ProfileModel.findOne({ where: { id } });
+    const profileModel = await ProfileSequelizeModel.findOne({ where: { id } });
 
     expect(profileModel?.toJSON()).toStrictEqual({
       id,

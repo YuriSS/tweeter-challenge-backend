@@ -1,0 +1,12 @@
+import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
+
+export interface UserEntityInput {
+  id?: Identifier;
+  profileId?: Identifier;
+  username: string;
+  password: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export type UserEntityFields = Required<Omit<UserEntityInput, "profileId">> & { profileId?: Identifier };

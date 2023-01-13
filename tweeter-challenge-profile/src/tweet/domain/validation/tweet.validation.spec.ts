@@ -13,6 +13,7 @@ describe("TweetValidation", () => {
     const validator = createFakeValidator();
     const isValidIdentifierSpy = jest.spyOn(validator, 'isValidIdentifier');
 
+    debugger
     TweetValidationFactory.create(validator).configureValidation(tweetMock, context);
 
     expect(isValidIdentifierSpy).toHaveBeenCalledTimes(1);

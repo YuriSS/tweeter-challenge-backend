@@ -3,6 +3,13 @@ services:
   webserver:
     build: .
     container_name: tweeter-profile-webserver
+    ports:
+      - "3000:3000"
+      - "9229:9229"
     user: '1001'
     volumes:
       - .:/home/node/app
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_PTRACE

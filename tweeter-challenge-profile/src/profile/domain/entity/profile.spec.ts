@@ -14,7 +14,6 @@ describe("ProfileEntity", () => {
     const identifierMakerSpy = jest.spyOn(identifierMaker, 'make');
 
     const profile = new ProfileEntity(profileMock, createFakeValidator(), identifierMaker);
-    debugger
 
     expect(identifierMakerSpy).toHaveBeenCalledTimes(1);
     expect(profile.name).toEqual(profileMock.name);
