@@ -6,7 +6,7 @@ export interface UserRepositoryContract extends Repository<UserEntity, UserModel
 
 interface UserExcludedModel {
   id: string;
-  profileId: string;
+  profileId?: string;
 }
 
-export type UserModel = Omit<UserEntityInput, "id"> & UserExcludedModel;
+export type UserModel = Omit<UserEntityInput, "id" | "profileId"> & UserExcludedModel;

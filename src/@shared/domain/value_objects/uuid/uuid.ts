@@ -6,6 +6,7 @@ export interface UniqueId {
 
 export interface MakeIdentifier {
   make: () => Identifier;
+  create: (id: string) => Identifier;
 }
 
 export class Identifier extends ValueObject<UniqueId> {
@@ -15,5 +16,6 @@ export class Identifier extends ValueObject<UniqueId> {
 }
 
 export const createFakeIdentifier = (seed: number = 1): MakeIdentifier => ({
-  make: () => new Identifier({ id: `${seed++}e${Date.now()}` })
+  make: () => new Identifier({ id: `${seed++}e${Date.now()}` }),
+  create: (id: string) => new Identifier({ id }),
 });

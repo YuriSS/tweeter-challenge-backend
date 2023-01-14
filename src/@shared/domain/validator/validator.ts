@@ -8,6 +8,7 @@ export interface ValidationErrorFields {
 export interface ValidatorFields<T> {
   value: T;
   context: string;
+  key?: string;
 }
 
 export interface Validator {
