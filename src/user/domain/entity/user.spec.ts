@@ -16,5 +16,6 @@ describe("UserEntity", () => {
     expect(profile.id).toBeTruthy();
     expect(profile.username).toEqual(profileMock.username);
     expect(profile.password).toEqual(profileMock.password);
+    expect(profile.profileId).toEqual(profileMock.profileId);
   });
 });

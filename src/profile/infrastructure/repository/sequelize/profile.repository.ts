@@ -2,7 +2,7 @@ import { ProfileEntity } from "@profile/domain/entity/profile"
 import { ProfileModel, ProfileRepositoryContract } from "@profile/domain/repository/profile.repository"
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid"
 import { ProfileSequelizeModel } from "@profile/infrastructure/repository/sequelize/profile.repository.model";
-import { NotFoundError } from "@shared/domain/errors/repository/not_found.error";
+import { ResourceNotFoundError } from "@shared/domain/errors/resource_not_found/resource_not_found.error";
 
 export class ProfileRepository implements ProfileRepositoryContract {
   private scope = 'Profile';
@@ -38,9 +38,13 @@ export class ProfileRepository implements ProfileRepositoryContract {
     const value = id.value.id;
     const profileSequelizeModel = await ProfileSequelizeModel.findOne({ where: { id: value }});
     if (!profileSequelizeModel) {
-      throw new NotFoundError({ field: 'id', value, scope: this.scope });
+      throw new ResourceNotFoundError({ field: 'id', value, scope: this.scope });
     }
     return this.createProfileModel(profileSequelizeModel);
+  }
+
+  public findBy(): Promise<ProfileModel> {
+    throw new Error("Not implemented yet");
   }
 
   public findAll(): Promise<ProfileModel[]> {

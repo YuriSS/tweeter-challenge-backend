@@ -1,9 +1,11 @@
 import { MakeIdentifierImpl } from "@shared/infrastructure/implemantation/make_identifier/make_identifier";
 import { ValidatorImpl } from "@shared/infrastructure/implemantation/validator/validator.impl";
 import { UserRepository } from "@user/infrastructure/repository/user.repository";
-import { CreateUserUsecase, InputUserCreateDto } from "@user/usecase/create/create.user.usecase";
+import { InputUserCreateDto } from "@user/usecase/create/create.user.usecase.type";
+import { CreateUserUsecase } from "@user/usecase/create/create.user.usecase";
 import { FindUserUsecase } from "@user/usecase/find/find.user.usecase";
 import express, { Request, Response } from "express"
+import { RequestErrorHandlerFactory } from "@shared/domain/errors/request_handler/request.handler.error";
 
 export const userRoute = express.Router();
 
@@ -21,10 +23,10 @@ userRoute.post("/", async (request: Request, response: Response) => {
 
     const output = await usecase.execute(userInputDto);
 
-    response.send(output);
+    response.json(output);
   }
   catch(error) {
-    response.status(500).send(error);
+    RequestErrorHandlerFactory.create(response).defineError(error);
   }
 });
 
@@ -35,11 +37,11 @@ userRoute.get("/:id", async (request: Request, response: Response) => {
 
   try {
     const id = request.params.id;
-    const output = usecase.execute({ id });
+    const output = await usecase.execute({ id });
 
     response.json(output);
   }
   catch(error) {
-    response.status(500).send(error);
+    RequestErrorHandlerFactory.create(response).defineError(error);
   }
 });

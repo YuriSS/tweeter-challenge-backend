@@ -1,6 +1,6 @@
 import { Identifier, MakeIdentifier } from "@shared/domain/value_objects/uuid/uuid";
 import { Validator } from "@shared/domain/validator/validator";
-import { ValidationError } from "@shared/domain/errors/validation.error";
+import { ValidationError } from "@shared/domain/errors/validation/validation.error";
 
 export interface EntityFields {
   id?: Identifier;

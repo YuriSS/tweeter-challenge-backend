@@ -16,7 +16,7 @@ describe("UserValidation", () => {
     UserValidationFactory.create(validator).validateIdentifier(profileMock, context);
 
     expect(isValidIdentifierSpy).toHaveBeenCalledTimes(1);
-    expect(isValidIdentifierSpy).toHaveBeenCalledWith({ value: profileMock.id, context });
+    expect(isValidIdentifierSpy).toHaveBeenCalledWith({ value: profileMock.id, key: "id", context });
   });
 
   it("should validate username", () => {
@@ -28,10 +28,10 @@ describe("UserValidation", () => {
     UserValidationFactory.create(validator).validateUsername(profileMock, context);
 
     expect(minSringLengthSpy).toHaveBeenCalledTimes(1);
-    expect(minSringLengthSpy).toHaveBeenCalledWith({ value: profileMock.username, min: 15, context });
+    expect(minSringLengthSpy).toHaveBeenCalledWith({ value: profileMock.username, min: 5, key: "username", context });
 
     expect(maxStringLengthSpy).toHaveBeenCalledTimes(1);
-    expect(maxStringLengthSpy).toHaveBeenCalledWith({ value: profileMock.username, max: 255, context });
+    expect(maxStringLengthSpy).toHaveBeenCalledWith({ value: profileMock.username, max: 15, key: "username", context });
   });
 
   it("should validate password", () => {
@@ -40,13 +40,13 @@ describe("UserValidation", () => {
     const minSringLengthSpy = jest.spyOn(validator, "minSringLength");
     const maxStringLengthSpy = jest.spyOn(validator, "maxStringLength");
 
-    UserValidationFactory.create(validator).validateUsername(profileMock, context);
+    UserValidationFactory.create(validator).validatePassword(profileMock, context);
 
     expect(minSringLengthSpy).toHaveBeenCalledTimes(1);
-    expect(minSringLengthSpy).toHaveBeenCalledWith({ value: profileMock.username, min: 5, context });
+    expect(minSringLengthSpy).toHaveBeenCalledWith({ value: profileMock.password, min: 5, key: "password", context });
 
     expect(maxStringLengthSpy).toHaveBeenCalledTimes(1);
-    expect(maxStringLengthSpy).toHaveBeenCalledWith({ value: profileMock.username, max: 15, context });
+    expect(maxStringLengthSpy).toHaveBeenCalledWith({ value: profileMock.password, max: 15, key: "password", context });
   });
 
   it("should validate createdAt and updatedAt", () => {

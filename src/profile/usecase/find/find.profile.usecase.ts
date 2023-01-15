@@ -1,11 +1,6 @@
-import { ProfileModel, ProfileRepositoryContract } from "@profile/domain/repository/profile.repository";
+import { ProfileRepositoryContract } from "@profile/domain/repository/profile.repository";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
-
-export interface InputFindProfileDto {
-  id: string;
-}
-
-export type OutputFindProfileDto = Omit<ProfileModel, "firstName" | "lastName"> & { name: { firstName: string, lastName: string } };
+import { InputFindProfileDto, OutputFindProfileDto } from "./find.profile.usecase.type";
 
 export class FindProfileUsecase {
   public constructor(private profileRepository: ProfileRepositoryContract) {}
