@@ -17,6 +17,9 @@ export class UserSequelizeModel extends Model<UserModel> {
   @Column({ allowNull: false })
   declare password: string;
 
+  @Column({ allowNull: false })
+  declare email: string;
+
   @ForeignKey(() => ProfileSequelizeModel)
   @Column
   declare profileId: string;

@@ -8,28 +8,11 @@ export class ProfileRepository implements ProfileRepositoryContract {
   private scope = 'Profile';
 
   public async create(entity: ProfileEntity): Promise<void> {
-    await ProfileSequelizeModel.create({
-      id: entity.id.value.id,
-      userId: entity.userId.value.id,
-      firstName: entity.name.firstName,
-      lastName: entity.name.lastName,
-      email: entity.email.value,
-      biography: entity.biography,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    });
+    await ProfileSequelizeModel.create(ProfileRepositoryMapper.fromEntity(entity));
   }
 
   public async update(entity: ProfileEntity): Promise<void> {
-    await ProfileSequelizeModel.update({
-      userId: entity.userId.value.id,
-      firstName: entity.name.firstName,
-      lastName: entity.name.lastName,
-      email: entity.email.value,
-      biography: entity.biography,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    }, {
+    await ProfileSequelizeModel.update(ProfileRepositoryMapper.fromPartialEntity(entity), {
       where: { id: entity.id.value.id }
     });
   }
@@ -40,27 +23,53 @@ export class ProfileRepository implements ProfileRepositoryContract {
     if (!profileSequelizeModel) {
       throw new ResourceNotFoundError({ field: 'id', value, scope: this.scope });
     }
-    return this.createProfileModel(profileSequelizeModel);
+    return ProfileRepositoryMapper.fromSequelize(profileSequelizeModel);
   }
 
-  public findBy(): Promise<ProfileModel> {
-    throw new Error("Not implemented yet");
+  public async findBy(fields: Partial<ProfileEntity>): Promise<ProfileModel> {
+    const where = ProfileRepositoryMapper.fromPartialEntity(fields);
+    const profileSequelizeModel = await ProfileSequelizeModel.findOne({ where });
+    if (!profileSequelizeModel) {
+      const field = Object.keys(where).join(", ");
+      const value = Object.values(where).join(", ");
+      throw new ResourceNotFoundError({ field, value, scope: this.scope });
+    }
+    return ProfileRepositoryMapper.fromSequelize(profileSequelizeModel);
   }
 
   public findAll(): Promise<ProfileModel[]> {
     throw new Error("Not implemented yet");
   }
+}
 
-  private createProfileModel(model: ProfileSequelizeModel): ProfileModel {
+class ProfileRepositoryMapper {
+  static fromSequelize(profileSequelizeModel: ProfileSequelizeModel): ProfileModel {
     return {
-      id: model.id,
-      userId: model.userId,
-      firstName: model.firstName,
-      lastName: model.lastName,
-      email: model.email,
-      biography: model.biography,
-      createdAt: model.createdAt,
-      updatedAt: model.updatedAt,
-    }
+      id: profileSequelizeModel.id,
+      userId: profileSequelizeModel.userId,
+      firstName: profileSequelizeModel.firstName,
+      lastName: profileSequelizeModel.lastName,
+      biography: profileSequelizeModel.biography,
+      createdAt: profileSequelizeModel.createdAt,
+      updatedAt: profileSequelizeModel.updatedAt,
+    } ;
+  }
+
+  static fromPartialEntity(profileEntity: Partial<ProfileEntity>): Partial<ProfileSequelizeModel> {
+    return Object.entries({
+      id: profileEntity.id?.value.id,
+      userId: profileEntity.userId?.value.id,
+      firstName: profileEntity.name?.firstName,
+      lastName: profileEntity.name?.lastName,
+      biography: profileEntity.biography,
+      createdAt: profileEntity.createdAt,
+      updatedAt: profileEntity.updatedAt,     
+    }).reduce((result: Partial<ProfileSequelizeModel>, [key, value]) => (
+      !value ? result : Object.assign(result, { [key]: value })
+    ), {} as Partial<ProfileSequelizeModel>);
+  }
+
+  static fromEntity(profileEntity: ProfileEntity): ProfileSequelizeModel {
+    return this.fromPartialEntity(profileEntity) as ProfileSequelizeModel;
   }
 }

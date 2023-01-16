@@ -1,7 +1,7 @@
 import { ProfileEntity } from "@profile/domain/entity/profile"
 import { ProfileEntityInput } from "@profile/domain/entity/profile.type"
 import { createFakeValidator } from "@shared/domain/validator/validator";
-import { createFakeIdentifier } from "@shared/domain/value_objects/uuid/uuid";
+import { createFakeIdentifier, Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { createMock } from "ts-auto-mock"
 
 describe("ProfileEntity", () => {
@@ -17,9 +17,8 @@ describe("ProfileEntity", () => {
 
     expect(identifierMakerSpy).toHaveBeenCalledTimes(1);
     expect(profile.name).toEqual(profileMock.name);
-    expect(profile.email).toEqual(profileMock.email);
     expect(profile.userId).toEqual(profileMock.userId);
-    expect(profile.biography).toBe("");
-    expect(profile.id).toBeTruthy();
+    expect(profile.biography).toBe(undefined);
+    expect(profile.id).toBeInstanceOf(Identifier);
   });
 });

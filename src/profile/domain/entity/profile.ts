@@ -4,7 +4,6 @@ import { ProfileEntityFields, ProfileEntityInput } from "@profile/domain/entity/
 import { Validator } from "@shared/domain/validator/validator";
 import { ProfileValidationFactory } from "@profile/domain/validation/profile.validation";
 import { Name } from "@shared/domain/value_objects/name/name";
-import { Email } from "@shared/domain/value_objects/email/email";
 
 export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityFields> {
   public constructor(fields: ProfileEntityInput, protected validator: Validator, protected makeIdentifier: MakeIdentifier) {
@@ -19,11 +18,7 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
     return this._fields.name;
   }
 
-  public get email(): Email {
-    return this._fields.email;
-  }
-
-  public get biography(): string {
+  public get biography(): string | undefined {
     return this._fields.biography;
   }
 
@@ -32,8 +27,7 @@ export class ProfileEntity extends Entity<ProfileEntityInput, ProfileEntityField
       id: fields.id || this.makeIdentifier.make(),
       userId: fields.userId,
       name: fields.name,
-      email: fields.email,
-      biography: fields.biography || "",
+      biography: fields.biography,
       updatedAt: fields.updatedAt || new Date(),
       createdAt: fields.createdAt || new Date(),
     }

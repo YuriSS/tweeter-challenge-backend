@@ -7,6 +7,13 @@ export class FindUserUsecase {
 
   public async execute(input: InputUserFindDto): Promise<OutputUserFindDto> {
     const user = await this.userRepository.find(this.makeId.create(input.id));
-    return user;
+    return {
+      id: user.id,
+      profileId: user.profileId,
+      email: user.email,
+      username: user.username,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 }

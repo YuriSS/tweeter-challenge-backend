@@ -1,3 +1,6 @@
+import { ProfileRepository } from "@profile/infrastructure/repository/sequelize/profile.repository";
+import { ProfileSequelizeModel } from "@profile/infrastructure/repository/sequelize/profile.repository.model";
+import { FindProfileUsecase } from "@profile/usecase/find/find.profile.usecase";
 import { ConflictError } from "@shared/domain/errors/conflict/conflict.error";
 import { ResourceNotFoundError } from "@shared/domain/errors/resource_not_found/resource_not_found.error";
 import { ValidationError } from "@shared/domain/errors/validation/validation.error";
@@ -8,6 +11,7 @@ import { UserSequelizeModel } from "@user/infrastructure/repository/user.reposit
 import { Sequelize } from "sequelize-typescript";
 import { FindUserUsecase } from "../find/find.user.usecase";
 import { CreateUserUsecase } from "./create.user.usecase";
+import { InputUserCreateDto } from "./create.user.usecase.type";
 
 describe("Create user integration usecase", () => {
   const date = new Date();
@@ -21,7 +25,7 @@ describe("Create user integration usecase", () => {
       logging: false,
       sync: { force: true },
     });
-    sequelize.addModels([UserSequelizeModel]);
+    sequelize.addModels([UserSequelizeModel, ProfileSequelizeModel]);
     await sequelize.sync();
   });
 
@@ -30,41 +34,67 @@ describe("Create user integration usecase", () => {
     await sequelize.close();
   });
 
-  it("should create user", async () => {
+  it("should create user and a profile", async () => {
     // Arrange
     const userRepository = new UserRepository();
+    const profileRepository = new ProfileRepository();
     const validator = createFakeValidator();
     const makeId = createFakeIdentifier();
-    const usecase = new CreateUserUsecase(userRepository, validator, makeId);
+    const usecase = new CreateUserUsecase(
+      userRepository,
+      profileRepository,
+      validator,
+      makeId
+    );
     const id = `1e${date.getTime()}`;
-
-    // Act
-    const output = await usecase.execute({
+    const profileId = `2e${date.getTime()}`;
+    const inputCreateUserDto: InputUserCreateDto = {
       password: "123",
       username: "jhondoe",
-    });
+      email: "jhondoe@gmail.com",
+    };
+
+    // Act
+    const output = await usecase.execute(inputCreateUserDto);
 
     // Assert
     expect(output).toEqual({
       id,
-      username: "jhondoe",
-      password: "123",
+      username: inputCreateUserDto.username,
+      email: inputCreateUserDto.email,
+      profileId,
       createdAt: date,
       updatedAt: date,
     });
 
     // Arrange
     const findUsecase = new FindUserUsecase(userRepository, makeId);
+    const findProfileUsecase = new FindProfileUsecase(profileRepository);
 
     // Act
-    const findOutput = await findUsecase.execute({ id });
+    const findUserOutput = await findUsecase.execute({ id });
+    const findProfileOutput = await findProfileUsecase.execute({
+      id: profileId,
+    });
 
     // Assert
-    expect(findOutput).toEqual({
+    expect(findUserOutput).toEqual({
       id,
-      username: "jhondoe",
-      password: "123",
-      profileId: null,
+      username: inputCreateUserDto.username,
+      email: inputCreateUserDto.email,
+      profileId,
+      createdAt: date,
+      updatedAt: date,
+    });
+
+    expect(findProfileOutput).toEqual({
+      id: profileId,
+      userId: id,
+      name: {
+        firstName: inputCreateUserDto.username,
+        lastName: null,
+      },
+      biography: null,
       createdAt: date,
       updatedAt: date,
     });
@@ -73,22 +103,31 @@ describe("Create user integration usecase", () => {
   it("should not create user because validation error", async () => {
     // Arrange
     const userRepository = new UserRepository();
+    const profileRepository = new ProfileRepository();
+    const makeId = createFakeIdentifier();
+    const id = `1e${date.getTime()}`;
+    const createProfileSpy = jest.spyOn(profileRepository, "create");
     const validator = createFakeValidator([
       { field: "id", message: "something wrong" },
     ]);
-    const makeId = createFakeIdentifier();
-    const usecase = new CreateUserUsecase(userRepository, validator, makeId);
-    const id = `1e${date.getTime()}`;
+    const usecase = new CreateUserUsecase(
+      userRepository,
+      profileRepository,
+      validator,
+      makeId
+    );
     const createExecution = async () => {
       await usecase.execute({
         password: "123",
         username: "jhondoe",
+        email: "jhondoe@gmail.com",
       });
     };
 
     // Act
     await expect(createExecution).rejects.toThrow("something wrong");
     await expect(createExecution).rejects.toThrow(ValidationError);
+    expect(createProfileSpy).not.toHaveBeenCalled();
 
     // Arrange
     const findUsecase = new FindUserUsecase(userRepository, makeId);
@@ -106,25 +145,35 @@ describe("Create user integration usecase", () => {
   it("should not create user duplicated", async () => {
     // Arrange
     const userRepository = new UserRepository();
+    const profileRepository = new ProfileRepository();
     const validator = createFakeValidator();
     const makeId = createFakeIdentifier();
-    const usecase = new CreateUserUsecase(userRepository, validator, makeId);
+    const createProfileSpy = jest.spyOn(profileRepository, "create");
+    const usecase = new CreateUserUsecase(
+      userRepository,
+      profileRepository,
+      validator,
+      makeId
+    );
 
     // Act
     await usecase.execute({
       password: "321",
       username: "jhondoe",
+      email: "jhondoe@gmail.com",
     });
 
     const secondExecution = async () => {
       await usecase.execute({
         password: "123",
         username: "jhondoe",
+        email: "jhondoe@gmail.com",
       });
     };
 
     // Assert
     await expect(secondExecution).rejects.toThrow("Username already exist");
     await expect(secondExecution).rejects.toThrow(ConflictError);
+    expect(createProfileSpy).toHaveBeenCalledTimes(1);
   });
 });

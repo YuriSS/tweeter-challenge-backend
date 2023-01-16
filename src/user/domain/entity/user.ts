@@ -1,5 +1,6 @@
 import { Entity } from "@shared/domain/entities/entity";
 import { Validator } from "@shared/domain/validator/validator";
+import { Email } from "@shared/domain/value_objects/email/email";
 import { Identifier, MakeIdentifier } from "@shared/domain/value_objects/uuid/uuid";
 import { UserEntityFields, UserEntityInput } from "@user/domain/entity/user.type";
 import { UserValidationFactory } from "@user/domain/validation/user.validation";
@@ -17,8 +18,12 @@ export class UserEntity extends Entity<UserEntityInput, UserEntityFields> {
     return this._fields.password;
   }
 
-  public get profileId(): Identifier | undefined {
+  public get profileId(): Identifier {
     return this._fields.profileId;
+  }
+
+  public get email(): Email {
+    return this._fields.email;
   }
 
   protected override mountFields(fields: UserEntityInput): UserEntityFields {
@@ -27,6 +32,7 @@ export class UserEntity extends Entity<UserEntityInput, UserEntityFields> {
       username: fields.username,
       password: fields.password,
       profileId: fields.profileId,
+      email: fields.email,
       updatedAt: fields.updatedAt || new Date(),
       createdAt: fields.createdAt || new Date(),
     }

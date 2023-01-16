@@ -2,7 +2,7 @@ import { ValueObject } from "@shared/domain/value_objects/value_object";
 
 export interface NameFields {
   firstName: string;
-  lastName: string;
+  lastName?: string;
 }
 
 export class Name extends ValueObject<NameFields> {
@@ -14,11 +14,11 @@ export class Name extends ValueObject<NameFields> {
     return this.value.firstName;
   }
 
-  public get lastName(): string {
+  public get lastName(): string | undefined {
     return this.value.lastName;
   }
 
   public get fullName(): string {
-    return `${this.firstName} ${this.lastName}`.trim();
+    return `${this.firstName} ${this.lastName || ""}`.trim();
   }
 }

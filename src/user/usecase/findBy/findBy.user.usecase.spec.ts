@@ -23,8 +23,9 @@ describe("findBy user unit usecase", () => {
     // Assert
     expect(output).toEqual({
       id: userModel.id,
+      email: userModel.email,
       username: userModel.username,
-      password: userModel.password,
+      profileId: undefined,
       createdAt: userModel.createdAt,
       updatedAt: userModel.updatedAt,
     });

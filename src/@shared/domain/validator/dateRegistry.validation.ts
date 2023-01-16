@@ -15,14 +15,14 @@ export class DateRegistryValidation implements EntityValidation<DateRegistryFiel
   }
 
   public validateCreatedAt(fields: DateRegistryFields, context: string): DateRegistryValidation {
-    this.validator.isDateBeforeOrEquals({ value: fields.createdAt, date: new Date(), context });
+    this.validator.isDateBeforeOrEquals({ value: fields?.createdAt, date: new Date(), context });
     return this;
   }
 
   public validateUpdatedAt(fields: DateRegistryFields, context: string): DateRegistryValidation {
     this.validator
-      .isDateAfterOrEquals({ value: fields.updatedAt, date: fields.createdAt, context })
-      .isDateBeforeOrEquals({ value: fields.updatedAt, date: new Date(), context });
+      .isDateAfterOrEquals({ value: fields?.updatedAt, date: fields?.createdAt, context })
+      .isDateBeforeOrEquals({ value: fields?.updatedAt, date: new Date(), context });
     return this;
   }
 }

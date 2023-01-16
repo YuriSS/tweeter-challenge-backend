@@ -1,32 +1,34 @@
 import { ResourceNotFoundError } from "@shared/domain/errors/resource_not_found/resource_not_found.error";
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import { UserEntity } from "@user/domain/entity/user";
-import { UserModel, UserRepositoryContract } from "@user/domain/repository/user.repository";
+import {
+  UserModel,
+  UserRepositoryContract,
+} from "@user/domain/repository/user.repository";
 import { UserSequelizeModel } from "./user.repository.model";
 
 export class UserRepository implements UserRepositoryContract {
   private scope = "User";
 
   public async create(entity: UserEntity): Promise<void> {
-    await UserSequelizeModel.create({
-      id: entity.id.value.id,
-      username: entity.username,
-      password: entity.password,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-    });
+    await UserSequelizeModel.create(UserRepositoryMapper.fromEntity(entity));
   }
 
   public async update(_: UserEntity): Promise<void> {
     throw new Error("Not implemented yet");
-
   }
 
   public async find(id: Identifier): Promise<UserModel> {
     const value = id.value.id;
-    const userSequelizeModel = await UserSequelizeModel.findOne({ where: { id: value }});
+    const userSequelizeModel = await UserSequelizeModel.findOne({
+      where: { id: value },
+    });
     if (!userSequelizeModel) {
-      throw new ResourceNotFoundError({ field: 'id', value, scope: this.scope });
+      throw new ResourceNotFoundError({
+        field: "id",
+        value,
+        scope: this.scope,
+      });
     }
     return UserRepositoryMapper.fromSequelize(userSequelizeModel);
   }
@@ -53,22 +55,32 @@ class UserRepositoryMapper {
       id: userSequelizeModel.id,
       username: userSequelizeModel.username,
       password: userSequelizeModel.password,
+      email: userSequelizeModel.email,
       profileId: userSequelizeModel.profileId,
       createdAt: userSequelizeModel.createdAt,
       updatedAt: userSequelizeModel.updatedAt,
-    } ;
+    };
   }
 
-  static fromPartialEntity(userEntity: Partial<UserEntity>): Partial<UserSequelizeModel> {
+  static fromPartialEntity(
+    userEntity: Partial<UserEntity>
+  ): Partial<UserSequelizeModel> {
     return Object.entries({
       id: userEntity.id?.value.id,
       username: userEntity.username,
       password: userEntity.password,
       profileId: userEntity.profileId?.value.id,
+      email: userEntity.email?.value,
       createdAt: userEntity.createdAt,
-      updatedAt: userEntity.updatedAt,     
-    }).reduce((result: Partial<UserSequelizeModel>, [key, value]) => (
-      !value ? result : Object.assign(result, { [key]: value })
-    ), {} as Partial<UserSequelizeModel>);
+      updatedAt: userEntity.updatedAt,
+    }).reduce(
+      (result: Partial<UserSequelizeModel>, [key, value]) =>
+        !value ? result : Object.assign(result, { [key]: value }),
+      {} as Partial<UserSequelizeModel>
+    );
+  }
+
+  static fromEntity(userEntity: UserEntity): UserSequelizeModel {
+    return this.fromPartialEntity(userEntity) as UserSequelizeModel;
   }
 }

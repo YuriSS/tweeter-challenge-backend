@@ -6,6 +6,7 @@ import { createFakeIdentifier } from "@shared/domain/value_objects/uuid/uuid";
 import { UserEntity } from "@user/domain/entity/user";
 import { createFakeValidator } from "@shared/domain/validator/validator";
 import { ResourceNotFoundError } from "@shared/domain/errors/resource_not_found/resource_not_found.error";
+import { Email } from "@shared/domain/value_objects/email/email";
 
 describe("Find use usecase integration", () => {
   const date = new Date();
@@ -37,6 +38,8 @@ describe("Find use usecase integration", () => {
 
     const userEntity = new UserEntity(
       {
+        email: new Email("jhondoe@gmail.com"),
+        profileId: makeId.make(),
         password: "1",
         username: "jhondoe",
       },
@@ -47,14 +50,14 @@ describe("Find use usecase integration", () => {
     userRepository.create(userEntity);
 
     // Act
-    const output = await usecase.execute({ id: `1e${date.getTime()}` });
+    const output = await usecase.execute({ id: `2e${date.getTime()}` });
 
     // Assert
     expect(output).toEqual({
-      id: `1e${date.getTime()}`,
+      id: `2e${date.getTime()}`,
       username: "jhondoe",
-      password: "1",
-      profileId: null,
+      profileId: `1e${date.getTime()}`,
+      email: "jhondoe@gmail.com",
       createdAt: date,
       updatedAt: date,
     });
@@ -70,7 +73,9 @@ describe("Find use usecase integration", () => {
     };
 
     // Act
-    await expect(execution).rejects.toThrow(`id with value 1e${date.getTime()} not found on User`);
+    await expect(execution).rejects.toThrow(
+      `id with value 1e${date.getTime()} not found on User`
+    );
     await expect(execution).rejects.toThrow(ResourceNotFoundError);
   });
 });

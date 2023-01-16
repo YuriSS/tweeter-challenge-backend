@@ -19,12 +19,9 @@ export class ProfileSequelizeModel extends Model<ProfileModel> {
   @Column({ allowNull: false })
   declare firstName: string;
 
-  @Column({ allowNull: false })
+  @Column
   declare lastName: string;
 
-  @Column({ allowNull: false })
-  declare email: string;
-
-  @Column({ allowNull: false })
+  @Column
   declare biography: string;
 }

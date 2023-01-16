@@ -1,47 +1,11 @@
-import { MakeIdentifierImpl } from "@shared/infrastructure/implemantation/make_identifier/make_identifier";
-import { ValidatorImpl } from "@shared/infrastructure/implemantation/validator/validator.impl";
-import { UserRepository } from "@user/infrastructure/repository/user.repository";
-import { InputUserCreateDto } from "@user/usecase/create/create.user.usecase.type";
-import { CreateUserUsecase } from "@user/usecase/create/create.user.usecase";
-import { FindUserUsecase } from "@user/usecase/find/find.user.usecase";
 import express, { Request, Response } from "express"
-import { RequestErrorHandlerFactory } from "@shared/domain/errors/request_handler/request.handler.error";
+import { WebserverAdapterFactory } from "@shared/domain/adapter/webserver/webserver.adapter";
+import { createUserController } from "@infrastructure/webserver/controller/user/create_user.controller";
+import { findUserController } from "../controller/user/find_user.controller";
 
 export const userRoute = express.Router();
 
-userRoute.post("/", async (request: Request, response: Response) => {
-  const repository = new UserRepository();
-  const validator = new ValidatorImpl();
-  const makeId = new MakeIdentifierImpl();
-  const usecase = new CreateUserUsecase(repository, validator, makeId);
+const adapter = WebserverAdapterFactory.create<Request, Response>();
 
-  try {
-    const userInputDto: InputUserCreateDto = {
-      username: request.body.username,
-      password: request.body.password,
-    };
-
-    const output = await usecase.execute(userInputDto);
-
-    response.json(output);
-  }
-  catch(error) {
-    RequestErrorHandlerFactory.create(response).defineError(error);
-  }
-});
-
-userRoute.get("/:id", async (request: Request, response: Response) => {
-  const repository = new UserRepository();
-  const makeId = new MakeIdentifierImpl();
-  const usecase = new FindUserUsecase(repository, makeId);
-
-  try {
-    const id = request.params.id;
-    const output = await usecase.execute({ id });
-
-    response.json(output);
-  }
-  catch(error) {
-    RequestErrorHandlerFactory.create(response).defineError(error);
-  }
-});
+userRoute.post("/", adapter.adaptController(createUserController));
+userRoute.get("/:id", adapter.adaptController(findUserController));

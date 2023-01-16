@@ -5,11 +5,10 @@ import { ProfileEntityInput } from "@profile/domain/entity/profile.type";
 export interface ProfileRepositoryContract extends Repository<ProfileEntity, ProfileModel> {}
 
 interface ProfileExcludedModel {
-  id: string;
+  id?: string;
   userId: string;
   firstName: string;
-  lastName: string;
-  email: string;
+  lastName?: string;
 }
 
-export type ProfileModel = Omit<ProfileEntityInput, "id" | "userId" | "name" | "email"> & ProfileExcludedModel;
+export type ProfileModel = Omit<ProfileEntityInput, "id" | "userId" | "name"> & ProfileExcludedModel;

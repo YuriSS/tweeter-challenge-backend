@@ -6,6 +6,7 @@ import { createFakeValidator } from "@shared/domain/validator/validator";
 import { createMock } from "ts-auto-mock";
 import { ProfileEntityInput } from "@profile/domain/entity/profile.type";
 import { createFakeIdentifier } from "@shared/domain/value_objects/uuid/uuid";
+import { Name } from "@shared/domain/value_objects/name/name";
 
 describe("Profile Repository", () => {
   const date = new Date();
@@ -18,7 +19,7 @@ describe("Profile Repository", () => {
       dialect: "sqlite",
       storage: ":memory:",
       logging: false,
-      sync: { force: true}
+      sync: { force: true },
     });
     sequelize.addModels([ProfileSequelizeModel]);
     await sequelize.sync();
@@ -30,10 +31,18 @@ describe("Profile Repository", () => {
   });
 
   it("should create a profile", async () => {
+    const makeId = createFakeIdentifier();
     const profileRepository = new ProfileRepository();
-    const profileInput = createMock<ProfileEntityInput>();
-    const profile = new ProfileEntity(profileInput, createFakeValidator(), createFakeIdentifier());
-    const id= `1e${date.getTime()}`;
+    const profileInput = createMock<ProfileEntityInput>({
+      userId: makeId.make(),
+      name: new Name({ firstName: "Jhondoe" }),
+    });
+    const profile = new ProfileEntity(
+      profileInput,
+      createFakeValidator(),
+      makeId
+    );
+    const id = `2e${date.getTime()}`;
 
     await profileRepository.create(profile);
 
@@ -43,11 +52,10 @@ describe("Profile Repository", () => {
       id,
       userId: profile.userId.value.id,
       firstName: profile.name.firstName,
-      lastName: profile.name.lastName,
-      email: profile.email.value,
-      biography: profile.biography,
+      lastName: null,
+      biography: null,
       createdAt: profile.createdAt,
-      updatedAt: profile.updatedAt
+      updatedAt: profile.updatedAt,
     });
   });
 });

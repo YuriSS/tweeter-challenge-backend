@@ -6,14 +6,14 @@ import {
 import { Identifier } from "@shared/domain/value_objects/uuid/uuid";
 import validator from "validator";
 
-export class ValidatorImpl implements Validator {
+export class ValidatorAdapter implements Validator {
   private validationErrors: ValidationErrorFields[] = [];
 
   public validate(): ValidationErrorFields[] {
     return this.validationErrors;
   }
 
-  public isValidEmail(field: ValidatorFields<string>): ValidatorImpl {
+  public isValidEmail(field: ValidatorFields<string>): ValidatorAdapter {
     return this.validator(
       "Email",
       field,
@@ -21,7 +21,7 @@ export class ValidatorImpl implements Validator {
     );
   }
 
-  public isValidIdentifier(field: ValidatorFields<Identifier>): ValidatorImpl {
+  public isValidIdentifier(field: ValidatorFields<Identifier>): ValidatorAdapter {
     return this.validator(
       "Id",
       field,
@@ -29,37 +29,37 @@ export class ValidatorImpl implements Validator {
     );
   }
 
-  public isEmptyString(_: ValidatorFields<string>): ValidatorImpl {
+  public isEmptyString(_: ValidatorFields<string>): ValidatorAdapter {
     throw new Error("Not implemented yet");
   }
 
   public maxStringLength(
     field: ValidatorFields<string> & { max: number }
-  ): ValidatorImpl {
+  ): ValidatorAdapter {
     const key = field.key || "String";
     return this.validator(
       key,
       field,
-      !!field.value && validator.isLength(field.value, { max: field.max }),
+      validator.isLength(field.value, { max: field.max }),
       `${key} length need to be less than ${field.max}`
     );
   }
 
   public minSringLength(
     field: ValidatorFields<string> & { min: number }
-  ): ValidatorImpl {
+  ): ValidatorAdapter {
     const key = field.key || "String";
     return this.validator(
       key,
       field,
-      !!field.value && validator.isLength(field.value, { min: field.min }),
+      validator.isLength(field.value, { min: field.min, max: Infinity }),
       `${key} length need to be greater than ${field.min}`
     );
   }
 
   public isDateAfterOrEquals(
     field: ValidatorFields<Date> & { date: Date }
-  ): ValidatorImpl {
+  ): ValidatorAdapter {
     return this.validator(
       "Date",
       field,
@@ -71,7 +71,7 @@ export class ValidatorImpl implements Validator {
 
   public isDateBeforeOrEquals(
     field: ValidatorFields<Date> & { date: Date }
-  ): ValidatorImpl {
+  ): ValidatorAdapter {
     return this.validator(
       "Date",
       field,
@@ -94,7 +94,7 @@ export class ValidatorImpl implements Validator {
     field: ValidatorFields<T>,
     isOk: boolean,
     messageComplement: string = ""
-  ): ValidatorImpl {
+  ): ValidatorAdapter {
     const messageKey = field.key || key;
     if (!isOk) {
       this.addValidationError(

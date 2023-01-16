@@ -4,7 +4,10 @@ import { createMock } from "ts-auto-mock";
 import { FindUserUsecase } from "./find.user.usecase";
 
 describe("Find user unit integration", () => {
-  const userModel = createMock<UserModel>({ username: "Jhon", password: "111" });
+  const userModel = createMock<UserModel>({
+    username: "Jhon",
+    password: "111",
+  });
   const makeId = createFakeIdentifier();
   const createRepositoryMock = (result: UserModel) => ({
     find: jest.fn().mockReturnValue(Promise.resolve(result)),
@@ -20,13 +23,13 @@ describe("Find user unit integration", () => {
     const usecase = new FindUserUsecase(userRepository, makeId);
 
     // Act
-    const output = await usecase.execute({ id: '123' });
+    const output = await usecase.execute({ id: "123" });
 
     // Assert
     expect(output).toEqual({
       id: userModel.id,
+      email: userModel.email,
       username: userModel.username,
-      password: userModel.password,
       createdAt: userModel.createdAt,
       updatedAt: userModel.updatedAt,
     });
@@ -42,7 +45,7 @@ describe("Find user unit integration", () => {
 
     // Act/Assert
     expect(async () => {
-      return await usecase.execute({ id: "123" })
+      return await usecase.execute({ id: "123" });
     }).rejects.toThrow("User not found");
   });
 });

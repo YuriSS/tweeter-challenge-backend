@@ -4,4 +4,4 @@ export interface InputUserFindDto {
   id: string;
 }
 
-export type OutputUserFindDto = UserModel;
+export type OutputUserFindDto = Omit<UserModel, "password">;

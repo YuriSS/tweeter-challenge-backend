@@ -7,4 +7,4 @@ export interface InputFindProfileDto {
 export type OutputFindProfileDto = Omit<
   ProfileModel,
   "firstName" | "lastName"
-> & { name: { firstName: string; lastName: string } };
+> & { name: { firstName: string; lastName?: string } };

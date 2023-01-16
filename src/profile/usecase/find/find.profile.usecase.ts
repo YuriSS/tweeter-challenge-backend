@@ -16,7 +16,6 @@ export class FindProfileUsecase {
         firstName: profile.firstName,
         lastName: profile.lastName
       },
-      email: profile.email,
       biography: profile.biography,
       updatedAt: profile.updatedAt,
       createdAt: profile.createdAt,

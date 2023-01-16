@@ -6,8 +6,15 @@ export class FindByUserUsecase {
     private userRepository: UserRepositoryContract
   ) {}
 
-  public execute(fields: InputFindByDto): Promise<OutputFindByDto> {
-    const userSequelizeModel = this.userRepository.findBy(fields);
-    return userSequelizeModel;
+  public async execute(fields: InputFindByDto): Promise<OutputFindByDto> {
+    const userSequelizeModel = await this.userRepository.findBy(fields);
+    return {
+      id: userSequelizeModel.id,
+      profileId: userSequelizeModel.profileId,
+      email: userSequelizeModel.email,
+      username: userSequelizeModel.username,
+      createdAt: userSequelizeModel.createdAt,
+      updatedAt: userSequelizeModel.updatedAt
+    };
   }
 }
